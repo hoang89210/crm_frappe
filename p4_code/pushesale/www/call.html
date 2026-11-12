@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1f6feb">
+<title>Gọi SIM - Pushsale</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 12px; background: #f4f6f8; color: #1a1a1a; }
+  .card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+  h1 { font-size: 20px; margin: 0 0 8px; }
+  h2 { font-size: 16px; margin: 0 0 8px; }
+  label { display: block; font-size: 13px; color: #555; margin: 8px 0 4px; }
+  input { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; }
+  input[readonly] { background: #f0f0f0; color: #555; font-size: 13px; }
+  button { width: 100%; padding: 12px; font-size: 16px; border: none; border-radius: 8px; margin-top: 8px; cursor: pointer; }
+  .primary { background: #1f6feb; color: #fff; }
+  .muted { background: #e5e7eb; color: #111; }
+  .danger { background: #fff; color: #b42318; border: 1px solid #b42318; }
+  .big-call { background: #1a7f37; color: #fff; font-size: 22px; padding: 18px; display: block; text-align: center; text-decoration: none; border-radius: 12px; margin: 12px 0; }
+  .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .result-grid button { margin-top: 0; background: #eef4ff; color: #1f6feb; border: 1px solid #1f6feb; }
+  .status { font-size: 14px; padding: 8px; border-radius: 8px; background: #eef4ff; margin-top: 8px; word-break: break-all; }
+  .hidden { display: none; }
+  .phone-big { font-size: 28px; font-weight: bold; letter-spacing: 1px; }
+  .who { font-size: 14px; color: #1a7f37; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="card" id="loginCard">
+  <h1>Gọi SIM - Pushsale</h1>
+  <div id="loginForm">
+    <label>Địa chỉ Frappe</label>
+    <input id="baseUrl" placeholder="http://...:8000">
+    <label>Email Sale</label>
+    <input id="email" type="email" placeholder="sale1@crm.local" autocomplete="username">
+    <label>Mật khẩu</label>
+    <input id="password" type="password" autocomplete="current-password">
+    <label>Tên máy (VD: Dien thoai A)</label>
+    <input id="deviceName" placeholder="Dien thoai">
+    <button class="primary" id="loginBtn">Đăng nhập &amp; gắn máy</button>
+  </div>
+  <div id="whoBox" class="hidden">
+    <div class="who" id="whoText"></div>
+    <label>Device token (máy này, chỉ đọc)</label>
+    <input id="tokenView" readonly>
+    <button class="primary" id="startBtn">Bắt đầu nghe lệnh gọi</button>
+    <button class="muted hidden" id="stopBtn">Dừng</button>
+    <button class="danger" id="logoutBtn">Đăng xuất (xóa máy này)</button>
+  </div>
+  <div class="status" id="status">Nhập email + mật khẩu Sale để gắn máy.</div>
+</div>
+
+<div class="card hidden" id="jobCard">
+  <h2 id="leadName">Lead</h2>
+  <div class="phone-big" id="leadPhone">-</div>
+  <a class="big-call" id="dialBtn" href="#">GỌI NGAY</a>
+  <div class="status">Bấm GỌI NGAY để mở bàn phím gọi. Gọi xong quay lại đây chọn kết quả.</div>
+  <label>Kết quả cuộc gọi</label>
+  <div class="result-grid" id="resultGrid"></div>
+  <div id="henBox" class="hidden">
+    <label>Hẹn gọi lại lúc</label>
+    <input id="ngayHen" type="datetime-local">
+  </div>
+  <label>Lý do / ghi chú</label>
+  <input id="lyDo" placeholder="VD: khách bận, gọi lại chiều">
+  <button class="danger" id="skipBtn">Bỏ qua (không tính cuộc gọi)</button>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var baseEl = $('baseUrl'), emailEl = $('email'), passEl = $('password'), devEl = $('deviceName');
+  var statusEl = $('status'), jobCard = $('jobCard');
+
+  var RESULTS = ['Khong nghe', 'Thue bao', 'Ban goi lai', 'Can cham tiep', 'Hen goi lai', 'Chot', 'Churn'];
+  var RESULT_LABELS = {
+    'Khong nghe': 'Không nghe', 'Thue bao': 'Thuê bao', 'Ban goi lai': 'Bận gọi lại',
+    'Can cham tiep': 'Cần chăm tiếp', 'Hen goi lai': 'Hẹn gọi lại', 'Chot': 'Chốt', 'Churn': 'Churn'
+  };
+
+  var base = localStorage.getItem('ps_base') || window.location.origin;
+  var email = localStorage.getItem('ps_email') || '';
+  var token = localStorage.getItem('ps_token') || '';
+  var deviceName = localStorage.getItem('ps_device') || '';
+  var polling = false, timer = null, currentJob = null;
+
+  baseEl.value = base;
+  emailEl.value = email;
+  if (deviceName) devEl.value = deviceName;
+  if (email && token) showBound();
+
+  function setStatus(m) { statusEl.textContent = m; }
+  function apiUrl(method) { return base.replace(/\/$/, '') + '/api/method/' + method; }
+
+  function postForm(method, data) {
+    var body = Object.keys(data).map(function (k) { return k + '=' + encodeURIComponent(data[k]); }).join('&');
+    return fetch(apiUrl(method), {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+      body: body
+    }).then(readJson);
+  }
+
+  function postJson(method, data) {
+    return fetch(apiUrl(method), {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(readJson);
+  }
+
+  function getJson(method, params) {
+    var qs = Object.keys(params || {}).map(function (k) { return k + '=' + encodeURIComponent(params[k]); }).join('&');
+    return fetch(apiUrl(method) + (qs ? '?' + qs : ''), {
+      headers: { 'Accept': 'application/json' }
+    }).then(readJson);
+  }
+
+  function readJson(r) {
+    return r.json().then(function (j) {
+      if (!r.ok) {
+        var msg = 'HTTP ' + r.status;
+        try {
+          if (j.exc_type) msg = j.exc_type;
+          if (j._server_messages) {
+            var sm = JSON.parse(j._server_messages);
+            if (sm.length) msg = JSON.parse(sm[0]).message || msg;
+          }
+        } catch (e) { /* keep default */ }
+        throw new Error(msg);
+      }
+      return j.message;
+    });
+  }
+
+  function showBound() {
+    $('loginForm').classList.add('hidden');
+    $('whoBox').classList.remove('hidden');
+    $('whoText').textContent = 'Đã gắn máy: ' + email;
+    $('tokenView').value = token;
+  }
+
+  function showLogin(msg) {
+    $('loginForm').classList.remove('hidden');
+    $('whoBox').classList.add('hidden');
+    if (msg) setStatus(msg);
+  }
+
+  $('loginBtn').onclick = function () {
+    base = (baseEl.value || window.location.origin).replace(/\/$/, '');
+    email = emailEl.value.trim();
+    var pw = passEl.value;
+    var dname = devEl.value.trim() || 'Dien thoai';
+    if (!email || !pw) { setStatus('Nhập email + mật khẩu.'); return; }
+    setStatus('Đang đăng nhập...');
+    postForm('login', { usr: email, pwd: pw }).then(function () {
+      setStatus('Đăng nhập OK. Đang gắn máy...');
+      return postJson('pushesale.api.call.register_device', { device_name: dname });
+    }).then(function (res) {
+      token = res.device_token;
+      deviceName = dname;
+      localStorage.setItem('ps_base', base);
+      localStorage.setItem('ps_email', email);
+      localStorage.setItem('ps_token', token);
+      localStorage.setItem('ps_device', dname);
+      passEl.value = '';
+      showBound();
+      setStatus('Gắn máy xong. Bấm "Bắt đầu nghe lệnh gọi".');
+    }).catch(function (e) {
+      setStatus('Lỗi: ' + e.message + ' (kiểm tra email/mật khẩu, đúng role Sales).');
+    });
+  };
+
+  $('startBtn').onclick = function () {
+    polling = true;
+    $('startBtn').classList.add('hidden');
+    $('stopBtn').classList.remove('hidden');
+    setStatus('Đang nghe lệnh gọi...');
+    pollOnce();
+  };
+
+  $('stopBtn').onclick = function () {
+    polling = false;
+    if (timer) clearTimeout(timer);
+    $('startBtn').classList.remove('hidden');
+    $('stopBtn').classList.add('hidden');
+    setStatus('Đã dừng.');
+  };
+
+  $('logoutBtn').onclick = function () {
+    polling = false;
+    if (timer) clearTimeout(timer);
+    postForm('logout', {}).catch(function () {});
+    ['ps_email', 'ps_token', 'ps_device'].forEach(function (k) { localStorage.removeItem(k); });
+    email = ''; token = ''; deviceName = '';
+    jobCard.classList.add('hidden');
+    $('startBtn').classList.remove('hidden');
+    $('stopBtn').classList.add('hidden');
+    showLogin('Đã đăng xuất, xóa gắn máy trên điện thoại này.');
+  };
+
+  function pollOnce() {
+    if (!polling) return;
+    getJson('pushesale.api.call.poll', { device_token: token }).then(function (res) {
+      if (res && res.job) { onJob(res); }
+      else { setStatus('Đang nghe... (' + new Date().toLocaleTimeString() + ')'); schedule(); }
+    }).catch(function (e) { setStatus('Lỗi poll: ' + e.message); schedule(); });
+  }
+  function schedule() { if (polling) timer = setTimeout(pollOnce, 3000); }
+
+  function onJob(job) {
+    polling = false;
+    if (timer) clearTimeout(timer);
+    currentJob = job;
+    $('leadName').textContent = job.lead_name || job.lead;
+    $('leadPhone').textContent = job.phone;
+    $('dialBtn').href = 'tel:' + String(job.phone).replace(/[^+\d]/g, '');
+    jobCard.classList.remove('hidden');
+    setStatus('Có lệnh gọi mới: ' + job.job);
+    window.scrollTo(0, 0);
+  }
+
+  function resetToPolling(msg) {
+    currentJob = null;
+    jobCard.classList.add('hidden');
+    $('lyDo').value = '';
+    $('ngayHen').value = '';
+    $('henBox').classList.add('hidden');
+    polling = true;
+    setStatus(msg);
+    schedule();
+  }
+
+  var grid = $('resultGrid');
+  RESULTS.forEach(function (r) {
+    var b = document.createElement('button');
+    b.textContent = RESULT_LABELS[r];
+    b.setAttribute('data-r', r);
+    b.onclick = function () { submitResult(r); };
+    grid.appendChild(b);
+  });
+  grid.querySelector('[data-r="Hen goi lai"]').addEventListener('click', function () {
+    $('henBox').classList.remove('hidden');
+  });
+
+  function submitResult(ketQua) {
+    if (!currentJob) return;
+    if (ketQua === 'Hen goi lai' && !$('ngayHen').value) {
+      $('henBox').classList.remove('hidden');
+      setStatus('Chọn giờ hẹn trước khi gửi.');
+      return;
+    }
+    var ngayHen = null;
+    var hv = $('ngayHen').value;
+    if (hv) ngayHen = hv.replace('T', ' ') + ':00';
+    setStatus('Đang gửi kết quả...');
+    postJson('pushesale.api.call.disposition', {
+      device_token: token, job: currentJob.job, ket_qua: ketQua,
+      ly_do: $('lyDo').value, ngay_hen: ngayHen
+    }).then(function (res) {
+      resetToPolling('Đã ghi: ' + ketQua + ' → lead ' + (res.care_status || '') + '. Nghe tiếp...');
+    }).catch(function (e) { setStatus('Lỗi gửi: ' + e.message); });
+  }
+
+  $('skipBtn').onclick = function () {
+    if (!currentJob) return;
+    postJson('pushesale.api.call.skip_job', { device_token: token, job: currentJob.job }).then(function () {
+      resetToPolling('Đã bỏ qua job. Nghe tiếp...');
+    }).catch(function (e) { setStatus('Lỗi bỏ qua: ' + e.message); });
+  };
+})();
+</script>
+</body>
+</html>

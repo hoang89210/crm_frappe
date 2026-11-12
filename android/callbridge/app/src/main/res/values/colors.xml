@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#F4F6F8</color>
+    <color name="card">#FFFFFF</color>
+    <color name="primary">#1F6FEB</color>
+    <color name="call">#1A7F37</color>
+    <color name="danger">#B42318</color>
+    <color name="muted">#E5E7EB</color>
+    <color name="text">#1A1A1A</color>
+    <color name="hint">#555555</color>
+    <color name="status_bg">#EEF4FF</color>
+</resources>

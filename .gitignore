@@ -30,3 +30,8 @@ Test/tunnel-url-history.txt
 .idea/
 Thumbs.db
 desktop.ini
+
+# Android build
+android/**/build/
+android/callbridge/local.properties
+.gradle/

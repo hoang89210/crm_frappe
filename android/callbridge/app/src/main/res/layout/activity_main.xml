@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:id="@+id/loginCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gọi SIM - Pushesale"
+                android:textColor="@color/text"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/loginForm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Địa chỉ Frappe" android:textColor="@color/hint" android:textSize="13sp" />
+                <EditText android:id="@+id/baseUrl" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="http://192.168.x.x:8000" android:inputType="textUri" android:textSize="16sp" />
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Email Sale" android:textColor="@color/hint" android:textSize="13sp" />
+                <EditText android:id="@+id/email" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="sale1@crm.local" android:inputType="textEmailAddress" android:textSize="16sp" />
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Mật khẩu" android:textColor="@color/hint" android:textSize="13sp" />
+                <EditText android:id="@+id/password" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword" android:textSize="16sp" />
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Tên máy (VD: Dien thoai A)" android:textColor="@color/hint" android:textSize="13sp" />
+                <EditText android:id="@+id/deviceName" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Dien thoai" android:inputType="text" android:textSize="16sp" />
+
+                <Button android:id="@+id/loginBtn" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:backgroundTint="@color/primary" android:text="Đăng nhập &amp; gắn máy" android:textAllCaps="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/whoBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView android:id="@+id/whoText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/call" android:textSize="14sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Device token (máy này, chỉ đọc)" android:textColor="@color/hint" android:textSize="13sp" />
+                <EditText android:id="@+id/tokenView" android:layout_width="match_parent" android:layout_height="wrap_content" android:enabled="false" android:inputType="none" android:textSize="13sp" />
+                <Button android:id="@+id/startBtn" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:backgroundTint="@color/primary" android:text="Bắt đầu nghe lệnh gọi" android:textAllCaps="false" />
+                <Button android:id="@+id/stopBtn" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:backgroundTint="@color/muted" android:text="Dừng" android:textAllCaps="false" android:textColor="@color/text" android:visibility="gone" />
+                <Button android:id="@+id/logoutBtn" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:backgroundTint="@android:color/white" android:text="Đăng xuất (xóa máy này)" android:textAllCaps="false" android:textColor="@color/danger" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/status_bg"
+                android:padding="8dp"
+                android:text="Nhập email + mật khẩu Sale để gắn máy."
+                android:textColor="@color/text"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/jobCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@color/card"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <TextView android:id="@+id/leadName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Lead" android:textColor="@color/text" android:textSize="16sp" android:textStyle="bold" />
+            <TextView android:id="@+id/leadPhone" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="-" android:textColor="@color/text" android:textSize="28sp" android:textStyle="bold" />
+            <Button android:id="@+id/dialBtn" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:backgroundTint="@color/call" android:padding="18dp" android:text="GỌI NGAY" android:textSize="20sp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:background="@color/status_bg" android:padding="8dp" android:text="Bấm GỌI NGAY để mở bàn phím gọi. Gọi xong quay lại đây chọn kết quả." android:textSize="14sp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Kết quả cuộc gọi" android:textColor="@color/hint" android:textSize="13sp" />
+            <GridLayout android:id="@+id/resultGrid" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="2" />
+            <LinearLayout android:id="@+id/henBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Hẹn gọi lại lúc" android:textColor="@color/hint" android:textSize="13sp" />
+                <EditText android:id="@+id/ngayHen" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="2026-10-16 15:00" android:inputType="datetime" android:textSize="16sp" />
+            </LinearLayout>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Lý do / ghi chú" android:textColor="@color/hint" android:textSize="13sp" />
+            <EditText android:id="@+id/lyDo" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="VD: khách bận, gọi lại chiều" android:inputType="text" android:textSize="16sp" />
+            <Button android:id="@+id/skipBtn" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:backgroundTint="@android:color/white" android:text="Bỏ qua (không tính cuộc gọi)" android:textAllCaps="false" android:textColor="@color/danger" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
