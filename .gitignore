@@ -1,0 +1,32 @@
+# Python
+*.pyc
+__pycache__/
+*.pyo
+
+# Frappe / Bench
+frappe-bench/
+sites/*/private/
+sites/*/public/files/
+*.log
+
+# Node
+node_modules/
+dist/
+
+# Secrets
+*.token
+cloudflared/
+site_config.json
+
+# Tunnel info
+Test/tunnel-url.txt
+Test/tunnel-url-history.txt
+
+# Test logs
+/tmp/p6-*.log
+
+# IDE / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
