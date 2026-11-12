@@ -1,0 +1,23 @@
+{
+ "doctype": "DocType",
+ "name": "Stock Entry",
+ "module": "Call Bridge",
+ "autoname": "naming_series:",
+ "naming_rule": "By \"Naming Series\" field",
+ "is_submittable": 1,
+ "engine": "InnoDB",
+ "field_order": ["naming_series", "entry_type", "from_warehouse", "to_warehouse", "remarks", "items"],
+ "fields": [
+  {"fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "STE-.YYYY.-", "default": "STE-.YYYY.-", "reqd": 1},
+  {"fieldname": "entry_type", "fieldtype": "Select", "label": "Loại", "options": "Nhập\nXuất\nĐiều chuyển", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "from_warehouse", "fieldtype": "Link", "label": "Kho xuất", "options": "Warehouse"},
+  {"fieldname": "to_warehouse", "fieldtype": "Link", "label": "Kho nhập", "options": "Warehouse"},
+  {"fieldname": "remarks", "fieldtype": "Small Text", "label": "Ghi chú"},
+  {"fieldname": "items", "fieldtype": "Table", "label": "Dòng", "options": "Stock Entry Item", "reqd": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "submit": 1, "cancel": 1, "report": 1},
+  {"role": "Sales Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "submit": 1, "cancel": 1, "report": 1},
+  {"role": "Sales User", "read": 1, "write": 1, "create": 1, "submit": 1, "cancel": 1, "report": 1}
+ ]
+}
