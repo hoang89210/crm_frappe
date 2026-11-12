@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cấu hình kênh - Pushesale</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 12px; background: #f4f6f8; color: #1a1a1a; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+  h1 { font-size: 20px; margin: 0 0 8px; }
+  h2 { font-size: 16px; margin: 0 0 8px; }
+  label { display: block; font-size: 13px; color: #555; margin: 8px 0 4px; }
+  input, textarea { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; }
+  input[readonly], textarea[readonly] { background: #f0f0f0; color: #333; font-size: 13px; }
+  button { width: 100%; padding: 12px; font-size: 16px; border: none; border-radius: 8px; margin-top: 8px; cursor: pointer; }
+  .primary { background: #1f6feb; color: #fff; }
+  .muted { background: #e5e7eb; color: #111; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .status { font-size: 14px; padding: 8px; border-radius: 8px; background: #eef4ff; margin-top: 8px; white-space: pre-wrap; word-break: break-all; }
+  .hidden { display: none; }
+  .who { font-size: 14px; color: #1a7f37; font-weight: bold; }
+  .hint { font-size: 12px; color: #666; margin-top: 4px; }
+  .check { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 14px; }
+  .check input { width: auto; }
+</style>
+</head>
+<body>
+<div class="card" id="loginCard">
+  <h1>Cấu hình kênh</h1>
+  <div id="loginForm">
+    <label>Email</label>
+    <input id="email" type="email" placeholder="admin@crm.local" autocomplete="username">
+    <label>Mật khẩu</label>
+    <input id="password" type="password" autocomplete="current-password">
+    <button class="primary" id="loginBtn">Đăng nhập</button>
+  </div>
+  <div id="whoBox" class="hidden">
+    <div class="who" id="whoText"></div>
+    <button class="muted" id="logoutBtn">Đăng xuất</button>
+  </div>
+  <div class="status" id="status">Đăng nhập Admin / Sales Manager / Marketing.</div>
+</div>
+
+<div class="card hidden" id="cwCard">
+  <h2>Chatwoot inbox</h2>
+  <label>Chatwoot URL</label>
+  <input id="cwUrl" placeholder="http://127.0.0.1:3000">
+  <label>Account ID</label>
+  <input id="cwAccount" placeholder="1">
+  <label>API token</label>
+  <input id="cwToken" type="password" placeholder="để trống nếu giữ nguyên">
+  <label>Webhook secret</label>
+  <input id="cwSecret" type="password" placeholder="để trống nếu giữ nguyên">
+  <label>URL webhook (dán vào Chatwoot)</label>
+  <textarea id="cwWebhook" rows="2" readonly></textarea>
+  <label class="check"><input id="cwAuto" type="checkbox"> Tự đồng bộ inbox mỗi 10 phút</label>
+  <div class="row">
+    <button class="muted" id="cwTestBtn">Kiểm tra kết nối</button>
+    <button class="primary" id="cwSyncBtn">Đồng bộ inbox</button>
+  </div>
+  <button class="muted" id="cwSaveBtn">Lưu Chatwoot</button>
+  <div class="hint" id="cwLast"></div>
+</div>
+
+<div class="card hidden" id="fbCard">
+  <h2>Facebook comment</h2>
+  <label>Link Facebook page</label>
+  <input id="fbUrl" placeholder="https://www.facebook.com/ten-page">
+  <label>Page Access Token</label>
+  <input id="fbToken" type="password" placeholder="dán token, để trống nếu giữ nguyên">
+  <label>Page đã nhận diện</label>
+  <input id="fbPage" readonly placeholder="chưa kiểm tra">
+  <label class="check"><input id="fbAuto" type="checkbox" checked> Tự đồng bộ comment mỗi 10 phút</label>
+  <div class="row">
+    <button class="muted" id="fbTestBtn">Kiểm tra token</button>
+    <button class="primary" id="fbSyncBtn">Đồng bộ comment</button>
+  </div>
+  <button class="muted" id="fbSaveBtn">Lưu Facebook</button>
+  <div class="hint" id="fbLast"></div>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var statusEl = $('status');
+  var base = window.location.origin;
+
+  function setStatus(m) { statusEl.textContent = m; }
+  function apiUrl(method) { return base.replace(/\/$/, '') + '/api/method/' + method; }
+
+  function postForm(method, data) {
+    var body = Object.keys(data).map(function (k) { return k + '=' + encodeURIComponent(data[k]); }).join('&');
+    return fetch(apiUrl(method), {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+      body: body
+    }).then(readJson);
+  }
+
+  function postJson(method, data) {
+    return fetch(apiUrl(method), {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data || {})
+    }).then(readJson);
+  }
+
+  function getJson(method) {
+    return fetch(apiUrl(method), {
+      credentials: 'include',
+      headers: { 'Accept': 'application/json' }
+    }).then(readJson);
+  }
+
+  function readJson(r) {
+    return r.json().then(function (j) {
+      if (!r.ok) {
+        var msg = 'HTTP ' + r.status;
+        try {
+          if (j.exc_type) msg = j.exc_type;
+          if (j._server_messages) {
+            var sm = JSON.parse(j._server_messages);
+            if (sm.length) msg = JSON.parse(sm[0]).message || msg;
+          }
+        } catch (e) { /* keep */ }
+        throw new Error(msg);
+      }
+      return j.message;
+    });
+  }
+
+  function showLogged(user) {
+    $('loginForm').classList.add('hidden');
+    $('whoBox').classList.remove('hidden');
+    $('whoText').textContent = 'Đăng nhập: ' + user;
+    $('cwCard').classList.remove('hidden');
+    $('fbCard').classList.remove('hidden');
+  }
+
+  function fill(s) {
+    $('cwUrl').value = s.chatwoot_url || '';
+    $('cwAccount').value = s.chatwoot_account_id || '';
+    $('cwToken').value = s.chatwoot_api_token || '';
+    $('cwSecret').value = s.chatwoot_webhook_secret || '';
+    $('cwWebhook').value = s.chatwoot_webhook_url || '';
+    $('cwAuto').checked = !!s.chatwoot_sync_enabled;
+    $('cwLast').textContent = s.chatwoot_last_result || '';
+    $('fbUrl').value = s.facebook_page_url || '';
+    $('fbToken').value = s.facebook_access_token || '';
+    var page = ((s.facebook_page_name || '') + (s.facebook_page_id ? ' (' + s.facebook_page_id + ')' : '')).trim();
+    $('fbPage').value = page;
+    $('fbAuto').checked = !!s.facebook_sync_enabled;
+    $('fbLast').textContent = s.facebook_last_result || '';
+  }
+
+  function payload() {
+    return {
+      chatwoot_url: $('cwUrl').value.trim(),
+      chatwoot_account_id: $('cwAccount').value.trim(),
+      chatwoot_api_token: $('cwToken').value,
+      chatwoot_webhook_secret: $('cwSecret').value,
+      chatwoot_sync_enabled: $('cwAuto').checked ? 1 : 0,
+      facebook_page_url: $('fbUrl').value.trim(),
+      facebook_access_token: $('fbToken').value,
+      facebook_sync_enabled: $('fbAuto').checked ? 1 : 0
+    };
+  }
+
+  function loadSettings() {
+    return getJson('pushesale.api.settings.get_settings').then(function (s) {
+      fill(s || {});
+      setStatus('Đã tải cấu hình.');
+    });
+  }
+
+  function boot() {
+    getJson('frappe.auth.get_logged_user').then(function (user) {
+      if (!user || user === 'Guest') return;
+      showLogged(user);
+      return loadSettings();
+    }).catch(function () {});
+  }
+
+  $('loginBtn').onclick = function () {
+    var email = $('email').value.trim();
+    var pw = $('password').value;
+    if (!email || !pw) { setStatus('Nhập email + mật khẩu.'); return; }
+    setStatus('Đang đăng nhập...');
+    postForm('login', { usr: email, pwd: pw }).then(function () {
+      showLogged(email);
+      $('password').value = '';
+      return loadSettings();
+    }).catch(function (e) {
+      setStatus('Lỗi: ' + e.message);
+    });
+  };
+
+  $('logoutBtn').onclick = function () {
+    postForm('logout', {}).catch(function () {});
+    $('loginForm').classList.remove('hidden');
+    $('whoBox').classList.add('hidden');
+    $('cwCard').classList.add('hidden');
+    $('fbCard').classList.add('hidden');
+    setStatus('Đã đăng xuất.');
+  };
+
+  $('cwSaveBtn').onclick = function () {
+    setStatus('Đang lưu Chatwoot...');
+    postJson('pushesale.api.settings.save_settings', payload()).then(function (s) {
+      fill(s);
+      setStatus('Đã lưu Chatwoot.');
+    }).catch(function (e) { setStatus('Lỗi lưu: ' + e.message); });
+  };
+
+  $('fbSaveBtn').onclick = function () {
+    setStatus('Đang lưu Facebook...');
+    postJson('pushesale.api.settings.save_settings', payload()).then(function (s) {
+      fill(s);
+      setStatus('Đã lưu Facebook.');
+    }).catch(function (e) { setStatus('Lỗi lưu: ' + e.message); });
+  };
+
+  $('cwTestBtn').onclick = function () {
+    setStatus('Đang kiểm tra Chatwoot...');
+    var p = payload();
+    postJson('pushesale.api.chatwoot.test_connection', {
+      chatwoot_url: p.chatwoot_url,
+      chatwoot_api_token: p.chatwoot_api_token,
+      chatwoot_account_id: p.chatwoot_account_id
+    }).then(function (r) {
+      setStatus('Chatwoot OK: ' + (r.name || '') + (r.account_id ? ' / account ' + r.account_id : ''));
+      return loadSettings();
+    }).catch(function (e) { setStatus('Lỗi Chatwoot: ' + e.message); });
+  };
+
+  $('cwSyncBtn').onclick = function () {
+    setStatus('Đang đồng bộ inbox...');
+    postJson('pushesale.api.settings.save_settings', payload()).then(function () {
+      return postJson('pushesale.api.chatwoot.sync_inbox', {});
+    }).then(function (r) {
+      setStatus(r.result || JSON.stringify(r));
+      return loadSettings();
+    }).catch(function (e) { setStatus('Lỗi đồng bộ inbox: ' + e.message); });
+  };
+
+  $('fbTestBtn').onclick = function () {
+    setStatus('Đang kiểm tra Facebook...');
+    var p = payload();
+    postJson('pushesale.api.meta.test_connection', {
+      facebook_page_url: p.facebook_page_url,
+      facebook_access_token: p.facebook_access_token
+    }).then(function (r) {
+      setStatus('Facebook OK: ' + (r.page_name || '') + ' (' + (r.page_id || '') + ')');
+      return loadSettings();
+    }).catch(function (e) { setStatus('Lỗi Facebook: ' + e.message); });
+  };
+
+  $('fbSyncBtn').onclick = function () {
+    setStatus('Đang đồng bộ comment...');
+    postJson('pushesale.api.settings.save_settings', payload()).then(function () {
+      return postJson('pushesale.api.meta.sync_recent', {});
+    }).then(function (r) {
+      setStatus(r.result || JSON.stringify(r));
+      return loadSettings();
+    }).catch(function (e) { setStatus('Lỗi đồng bộ comment: ' + e.message); });
+  };
+
+  boot();
+})();
+</script>
+</body>
+</html>

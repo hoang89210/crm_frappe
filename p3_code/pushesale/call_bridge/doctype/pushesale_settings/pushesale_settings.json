@@ -1,0 +1,157 @@
+{
+ "doctype": "DocType",
+ "name": "Pushesale Settings",
+ "module": "Call Bridge",
+ "issingle": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "chatwoot_section",
+  "chatwoot_url",
+  "chatwoot_account_id",
+  "chatwoot_api_token",
+  "chatwoot_webhook_secret",
+  "chatwoot_sync_enabled",
+  "chatwoot_last_sync",
+  "chatwoot_last_result",
+  "facebook_section",
+  "facebook_page_url",
+  "facebook_access_token",
+  "facebook_page_id",
+  "facebook_page_name",
+  "facebook_sync_enabled",
+  "facebook_last_sync",
+  "facebook_last_result",
+  "meta_section",
+  "meta_app_secret",
+  "meta_verify_token"
+ ],
+ "fields": [
+  {
+   "fieldname": "chatwoot_section",
+   "fieldtype": "Section Break",
+   "label": "Chatwoot"
+  },
+  {
+   "fieldname": "chatwoot_url",
+   "fieldtype": "Data",
+   "label": "Chatwoot URL"
+  },
+  {
+   "fieldname": "chatwoot_account_id",
+   "fieldtype": "Data",
+   "label": "Account ID"
+  },
+  {
+   "fieldname": "chatwoot_api_token",
+   "fieldtype": "Password",
+   "label": "API Token"
+  },
+  {
+   "fieldname": "chatwoot_webhook_secret",
+   "fieldtype": "Password",
+   "label": "Webhook Secret"
+  },
+  {
+   "fieldname": "chatwoot_sync_enabled",
+   "fieldtype": "Check",
+   "label": "Tự đồng bộ inbox mỗi 10 phút",
+   "default": "0"
+  },
+  {
+   "fieldname": "chatwoot_last_sync",
+   "fieldtype": "Datetime",
+   "label": "Lần đồng bộ inbox",
+   "read_only": 1
+  },
+  {
+   "fieldname": "chatwoot_last_result",
+   "fieldtype": "Small Text",
+   "label": "Kết quả inbox",
+   "read_only": 1
+  },
+  {
+   "fieldname": "facebook_section",
+   "fieldtype": "Section Break",
+   "label": "Facebook Comment"
+  },
+  {
+   "fieldname": "facebook_page_url",
+   "fieldtype": "Data",
+   "label": "Link Facebook page"
+  },
+  {
+   "fieldname": "facebook_access_token",
+   "fieldtype": "Password",
+   "label": "Page Access Token"
+  },
+  {
+   "fieldname": "facebook_page_id",
+   "fieldtype": "Data",
+   "label": "Page ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "facebook_page_name",
+   "fieldtype": "Data",
+   "label": "Tên page",
+   "read_only": 1
+  },
+  {
+   "fieldname": "facebook_sync_enabled",
+   "fieldtype": "Check",
+   "label": "Tự đồng bộ comment mỗi 10 phút",
+   "default": "1"
+  },
+  {
+   "fieldname": "facebook_last_sync",
+   "fieldtype": "Datetime",
+   "label": "Lần đồng bộ comment",
+   "read_only": 1
+  },
+  {
+   "fieldname": "facebook_last_result",
+   "fieldtype": "Small Text",
+   "label": "Kết quả comment",
+   "read_only": 1
+  },
+  {
+   "fieldname": "meta_section",
+   "fieldtype": "Section Break",
+   "label": "Meta webhook (nâng cao)",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "meta_app_secret",
+   "fieldtype": "Password",
+   "label": "Meta App Secret"
+  },
+  {
+   "fieldname": "meta_verify_token",
+   "fieldtype": "Data",
+   "label": "Meta Verify Token"
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "write": 1,
+   "share": 1
+  },
+  {
+   "role": "Sales Manager",
+   "read": 1,
+   "write": 1,
+   "share": 1
+  },
+  {
+   "role": "Marketing",
+   "read": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
