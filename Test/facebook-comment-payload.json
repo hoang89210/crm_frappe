@@ -1,0 +1,20 @@
+{
+  "object": "page",
+  "entry": [
+    {
+      "id": "PAGE1",
+      "changes": [
+        {
+          "field": "feed",
+          "value": {
+            "item": "comment",
+            "comment_id": "123_456",
+            "post_id": "123_789",
+            "message": "goi minh 0912.345.678 nhe",
+            "from": { "name": "Anh Webhook", "id": "111" }
+          }
+        }
+      ]
+    }
+  ]
+}
