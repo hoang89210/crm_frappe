@@ -33,7 +33,13 @@ if (-not (Test-Path -LiteralPath $TunnelFile)) {
 
 if ($url) {
     $session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
-    try { $r = Invoke-WebRequest -Uri "$url/login" -UseBasicParsing -TimeoutSec 30; $ok = ($r.StatusCode -eq 200) } catch { $ok = $false }
+    $ok = $false
+    for ($i = 1; $i -le 8; $i++) {
+        try { $r = Invoke-WebRequest -Uri "$url/login" -UseBasicParsing -TimeoutSec 30; $ok = ($r.StatusCode -eq 200) } catch { $ok = $false }
+        if ($ok) { break }
+        Write-Host "  ... cho tunnel san sang ($i/8)" -ForegroundColor DarkGray
+        Start-Sleep -Seconds 5
+    }
     Report "Tunnel /login" $ok $url
 
     try {

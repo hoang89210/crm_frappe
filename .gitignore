@@ -35,3 +35,10 @@ desktop.ini
 android/**/build/
 android/callbridge/local.properties
 .gradle/
+
+# Local secrets
+docker/.env
+
+# Backups (chua du lieu thuc)
+Test/backups/
+

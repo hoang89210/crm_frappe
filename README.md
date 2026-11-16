@@ -20,4 +20,13 @@ CRM Frappe tích hợp Chatwoot, Facebook comment (nhiều Page), quản lý hà
 powershell -ExecutionPolicy Bypass -File "scripts\start-demo.ps1"
 ```
 
+Lấy URL hiện tại: `scripts\get-current-url.ps1`
+Reset dữ liệu demo: `scripts\reset-demo-data.ps1`
+Backup: `scripts\backup-demo.ps1`
+
+## Tài liệu
+- `Test/huong-dan-demo.md`: workflow demo + sửa code
+- `Test/huong-dan-su-dung.pdf`: hướng dẫn cho khách test
+- `docker/README.md`: kế hoạch deploy VPS Docker
+
 Chi tiết từng giai đoạn: `Test/ghi-chu-phat-trien.md`.

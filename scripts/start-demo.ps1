@@ -16,14 +16,9 @@ if (-not $url) { Write-Host "No URL file"; exit 1 }
 $url = $url.Trim()
 
 Write-Host "=== 3. Test ==="
-foreach ($path in @("/login", "/call", "/kenh")) {
-    $u = "$url$path"
-    try {
-        $r = Invoke-WebRequest -Uri $u -UseBasicParsing -TimeoutSec 15
-        Write-Host "$path => $($r.StatusCode)"
-    } catch {
-        Write-Host "$path => FAIL $($_.Exception.Message)"
-    }
-}
-Write-Host "URL: $url"
+& "$root\check-after-reboot.ps1"
+if ($LASTEXITCODE -ne 0) { Write-Host "Canh bao: co muc FAIL, xem log phia tren" -ForegroundColor Yellow }
+Write-Host ""
+Write-Host "URL: $url" -ForegroundColor Cyan
+Write-Host "Dang nhap: Administrator / admin"
 exit 0

@@ -1,0 +1,29 @@
+# Reference image cho CRM Frappe + pushesale.
+# Dựa theo pattern của frappe/frappe_docker (layered image).
+# Build context: thư mục docker/ (đã copy p6_code/pushesale vào docker/apps/pushesale).
+
+ARG FRAPPE_BRANCH=version-15
+FROM frappe/base:${FRAPPE_BRANCH}
+
+USER frappe
+WORKDIR /home/frappe
+
+COPY --chown=frappe:frappe apps.json /tmp/frappe-apps.json
+
+RUN bench init \
+      --skip-redis-config-generation \
+      --frappe-branch ${FRAPPE_BRANCH} \
+      /home/frappe/frappe-bench
+
+# App nội bộ: copy trực tiếp (không public trên GitHub)
+COPY --chown=frappe:frappe apps/pushesale /home/frappe/frappe-bench/apps/pushesale
+
+# App public pin theo version trong apps.json
+RUN cd /home/frappe/frappe-bench \
+ && bench get-app https://github.com/frappe/crm --branch v1.85.1 \
+ && bench setup requirements --node \
+ && bench build --app crm \
+ && bench build --app frappe
+
+USER frappe
+WORKDIR /home/frappe/frappe-bench

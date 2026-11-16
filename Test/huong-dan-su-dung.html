@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Hướng dẫn sử dụng CRM Demo</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: #1f2937; font-size: 12.5px; line-height: 1.55; }
+  h1 { font-size: 22px; color: #0f766e; margin: 0 0 4px; }
+  .sub { color: #6b7280; margin-bottom: 18px; }
+  h2 { font-size: 15px; color: #0f766e; border-bottom: 1px solid #d1d5db; padding-bottom: 4px; margin-top: 22px; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; }
+  th, td { border: 1px solid #d1d5db; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f0fdfa; }
+  .mono { font-family: Consolas, monospace; background: #f3f4f6; padding: 1px 5px; border-radius: 3px; }
+  .note { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 8px 12px; margin: 10px 0; }
+  ol, ul { margin: 6px 0 10px 20px; padding: 0; }
+  .footer { margin-top: 26px; color: #6b7280; font-size: 10.5px; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>Hướng dẫn sử dụng CRM Demo</h1>
+<div class="sub">Bản demo dành cho khách test nhanh — Hàng hóa, Kho, Kênh, Facebook Page</div>
+
+<h2>1. Đăng nhập</h2>
+<ol>
+  <li>Mở link demo do người phụ trách gửi.</li>
+  <li>Đăng nhập bằng tài khoản được cấp:</li>
+</ol>
+<table>
+  <tr><th>Tài khoản</th><th>Mật khẩu</th><th>Vai trò</th></tr>
+  <tr><td class="mono">Administrator</td><td class="mono">admin</td><td>Quản trị toàn hệ thống</td></tr>
+  <tr><td class="mono">sale1@crm.local</td><td class="mono">Sale1#crm2026</td><td>Nhân viên sale</td></tr>
+  <tr><td class="mono">sale2@crm.local</td><td class="mono">Sale2#crm2026</td><td>Nhân viên sale</td></tr>
+  <tr><td class="mono">sale3@crm.local</td><td class="mono">Sale3#crm2026</td><td>Nhân viên sale</td></tr>
+</table>
+<div class="note">Nếu trang báo 403: bấm vào đường dẫn <span class="mono">/login</span> để đăng nhập trước, sau đó mở lại màn hình CRM.</div>
+
+<h2>2. Màn Hàng hóa (/crm/hang-hoa)</h2>
+<ul>
+  <li><b>Danh mục cây:</b> chọn danh mục cha ở cột trái để xem sản phẩm; danh mục được thụt lề theo cấp.</li>
+  <li><b>Thêm sản phẩm:</b> nhập mã, tên, đơn vị, khối lượng, giá; chọn danh mục.</li>
+  <li><b>Combo:</b> bật "Là combo", chọn các sản phẩm lẻ bên trong, nhập giá combo riêng.</li>
+  <li><b>Import Excel:</b> tải file mẫu, điền dữ liệu, bấm Import. Combo bị bỏ qua khi import.</li>
+  <li><b>Xóa sản phẩm:</b> nếu sản phẩm đang nằm trong combo, hệ thống hỏi gỡ khỏi combo trước khi xóa.</li>
+  <li><b>Xóa combo:</b> hệ thống cảnh báo số sản phẩm lẻ bên trong nhưng vẫn cho xóa khi bạn xác nhận; sản phẩm lẻ vẫn được giữ lại.</li>
+</ul>
+
+<h2>3. Màn Kho (/crm/kho)</h2>
+<ul>
+  <li><b>Cây kho:</b> kho cha/con hiển thị thụt lề; khi chọn kho sẽ tính cả tồn của kho con.</li>
+  <li><b>Nhập kho:</b> chọn loại phiếu "Nhập", chọn kho nhận, thêm sản phẩm và số lượng.</li>
+  <li><b>Xuất kho:</b> chọn kho xuất, thêm dòng hàng; combo được tự bung thành sản phẩm lẻ.</li>
+  <li><b>Điều chuyển:</b> chọn kho nguồn và kho đích.</li>
+  <li><b>Sổ kho:</b> xem tồn hiện tại và các phiếu gần đây; phiếu đã ghi sổ có thể hủy để hoàn tồn.</li>
+</ul>
+
+<h2>4. Màn Kênh (/crm/kenh)</h2>
+<ul>
+  <li><b>Chatwoot:</b> dán URL, Account ID và API token để kiểm tra kết nối.</li>
+  <li><b>Facebook Page (nhiều Page):</b> thêm từng Page với URL, tên Page và Page Access Token.</li>
+  <li><b>Đồng bộ Facebook:</b> bấm đồng bộ từng Page hoặc tất cả; comment có số điện thoại sẽ thành Lead.</li>
+  <li><b>Bật/tắt đồng bộ:</b> dùng công tắc trên từng Page.</li>
+</ul>
+<div class="note">Page demo trong hệ thống chưa có token thật nên sẽ báo lỗi khi đồng bộ — đây là dữ liệu mẫu.</div>
+
+<h2>5. Dữ liệu mẫu có sẵn</h2>
+<table>
+  <tr><th>Nhóm</th><th>Dữ liệu</th></tr>
+  <tr><td>Sản phẩm</td><td>8 sản phẩm (son, kem, trà, bánh...) + 1 combo "Combo son"</td></tr>
+  <tr><td>Danh mục</td><td>7 danh mục nhiều cấp</td></tr>
+  <tr><td>Kho</td><td>Kho chính, đã có tồn cho 6 sản phẩm</td></tr>
+  <tr><td>Lead</td><td>5 lead mẫu với trạng thái và sản phẩm quan tâm</td></tr>
+  <tr><td>Facebook</td><td>1 Page demo (chưa kết nối)</td></tr>
+</table>
+
+<h2>6. Lưu ý khi test</h2>
+<ul>
+  <li>Đây là môi trường demo, dữ liệu có thể được reset định kỳ.</li>
+  <li>Không nhập thông tin thật nhạy cảm (số tài khoản, giấy tờ...).</li>
+  <li>Nếu gặp lỗi hoặc cần thay đổi, ghi lại màn hình và báo người phụ trách.</li>
+  <li>Link demo có thể thay đổi sau khi khởi động lại — dùng link mới nhất được gửi.</li>
+</ul>
+
+<div class="footer">CRM Frappe Demo — tài liệu dành cho khách test</div>
+
+</body>
+</html>
