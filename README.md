@@ -24,9 +24,21 @@ Lấy URL hiện tại: `scripts\get-current-url.ps1`
 Reset dữ liệu demo: `scripts\reset-demo-data.ps1`
 Backup: `scripts\backup-demo.ps1`
 
+## Deploy demo Docker (gửi server / người quen)
+
+```bash
+git clone https://github.com/hoang89210/crm_frappe.git
+cd crm_frappe/demo-docker
+```
+
+Hướng dẫn đầy đủ (tiếng Việt): **`demo-docker/HUONG_DAN_DEPLOY.md`**
+
+Stack: Frappe CRM + pushesale (Hàng hóa/Kho/Kênh) + Chatwoot, **1 URL** qua nginx.
+
 ## Tài liệu
+- `demo-docker/HUONG_DAN_DEPLOY.md`: deploy Docker cho người nhận server
 - `Test/huong-dan-demo.md`: workflow demo + sửa code
 - `Test/huong-dan-su-dung.pdf`: hướng dẫn cho khách test
-- `docker/README.md`: kế hoạch deploy VPS Docker
+- `docker/README.md`: template VPS Docker (tham khảo)
 
 Chi tiết từng giai đoạn: `Test/ghi-chu-phat-trien.md`.

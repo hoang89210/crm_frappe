@@ -1,0 +1,120 @@
+{
+ "doctype": "DocType",
+ "name": "Call Job",
+ "module": "Call Bridge",
+ "autoname": "naming_series:",
+ "allow_import": 1,
+ "field_order": [
+  "naming_series",
+  "lead",
+  "phone",
+  "device",
+  "status",
+  "column_break_1",
+  "created_by_user",
+  "expires_on",
+  "call_log"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "CALL-JOB-.YYYY.-",
+   "default": "CALL-JOB-.YYYY.-",
+   "no_copy": 1,
+   "print_hide": 1
+  },
+  {
+   "fieldname": "lead",
+   "fieldtype": "Link",
+   "label": "Lead",
+   "options": "CRM Lead",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "SĐT gọi",
+   "options": "Phone",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "device",
+   "fieldtype": "Link",
+   "label": "Máy gọi",
+   "options": "Call Device",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Trạng thái job",
+   "options": "Queued\nDelivered\nDialing\nClosed\nExpired",
+   "default": "Queued",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "created_by_user",
+   "fieldtype": "Link",
+   "label": "Người tạo",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expires_on",
+   "fieldtype": "Datetime",
+   "label": "Hết hạn lúc",
+   "read_only": 1
+  },
+  {
+   "fieldname": "call_log",
+   "fieldtype": "Link",
+   "label": "Call Log",
+   "options": "Call Log",
+   "read_only": 1
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "role": "Sales Manager",
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "share": 1
+  },
+  {
+   "role": "Sales User",
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

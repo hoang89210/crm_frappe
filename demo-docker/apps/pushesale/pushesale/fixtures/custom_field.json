@@ -1,0 +1,233 @@
+[
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_phone_e164",
+  "dt": "CRM Lead",
+  "fieldname": "custom_phone_e164",
+  "fieldtype": "Data",
+  "label": "SĐT E.164",
+  "insert_after": "mobile_no",
+  "options": "Phone",
+  "search_index": 1,
+  "unique": 1,
+  "read_only": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_external_id",
+  "dt": "CRM Lead",
+  "fieldname": "custom_external_id",
+  "fieldtype": "Data",
+  "label": "Mã ngoài (chống trùng)",
+  "insert_after": "custom_phone_e164",
+  "search_index": 1,
+  "unique": 1,
+  "read_only": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_chatwoot_contact_id",
+  "dt": "CRM Lead",
+  "fieldname": "custom_chatwoot_contact_id",
+  "fieldtype": "Data",
+  "label": "Chatwoot Contact",
+  "insert_after": "custom_external_id",
+  "search_index": 1,
+  "read_only": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_chatwoot_conversation_id",
+  "dt": "CRM Lead",
+  "fieldname": "custom_chatwoot_conversation_id",
+  "fieldtype": "Data",
+  "label": "Chatwoot Conversation",
+  "insert_after": "custom_chatwoot_contact_id",
+  "read_only": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_source_detail",
+  "dt": "CRM Lead",
+  "fieldname": "custom_source_detail",
+  "fieldtype": "Data",
+  "label": "Chi tiết nguồn",
+  "insert_after": "source"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_team",
+  "dt": "CRM Lead",
+  "fieldname": "custom_team",
+  "fieldtype": "Data",
+  "label": "Nhóm bán hàng",
+  "insert_after": "territory",
+  "description": "Phase 1: so khớp thủ công, chưa dùng cây Territory. Xem README."
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_care_status",
+  "dt": "CRM Lead",
+  "fieldname": "custom_care_status",
+  "fieldtype": "Select",
+  "label": "Trạng thái chăm sóc",
+  "insert_after": "status",
+  "options": "Mới\nĐang chăm\nCần chăm tiếp\nHẹn gọi lại\nChốt\nChurn\nKhông nghe nhiều",
+  "default": "Mới",
+  "reqd": 1,
+  "in_list_view": 1,
+  "in_standard_filter": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_care_count",
+  "dt": "CRM Lead",
+  "fieldname": "custom_care_count",
+  "fieldtype": "Int",
+  "label": "Số lần chăm",
+  "insert_after": "custom_care_status",
+  "default": "0",
+  "in_list_view": 1,
+  "read_only": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_last_call_result",
+  "dt": "CRM Lead",
+  "fieldname": "custom_last_call_result",
+  "fieldtype": "Data",
+  "label": "Kết quả gọi cuối",
+  "insert_after": "custom_care_count",
+  "in_list_view": 1,
+  "read_only": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_next_followup",
+  "dt": "CRM Lead",
+  "fieldname": "custom_next_followup",
+  "fieldtype": "Datetime",
+  "label": "Hẹn chăm tiếp",
+  "insert_after": "custom_last_call_result",
+  "in_standard_filter": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_assigned_device",
+  "dt": "CRM Lead",
+  "fieldname": "custom_assigned_device",
+  "fieldtype": "Link",
+  "label": "Máy gọi",
+  "insert_after": "lead_owner",
+  "options": "Call Device"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_raw_text",
+  "dt": "CRM Lead",
+  "fieldname": "custom_raw_text",
+  "fieldtype": "Small Text",
+  "label": "Nội dung gốc",
+  "insert_after": "custom_assigned_device"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Product-custom_category",
+  "dt": "CRM Product",
+  "fieldname": "custom_category",
+  "fieldtype": "Link",
+  "label": "Danh mục",
+  "options": "Product Category",
+  "insert_after": "product_name",
+  "in_list_view": 1,
+  "in_standard_filter": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Product-custom_uom",
+  "dt": "CRM Product",
+  "fieldname": "custom_uom",
+  "fieldtype": "Data",
+  "label": "Đơn vị tính",
+  "insert_after": "custom_category",
+  "in_list_view": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Product-custom_weight_kg",
+  "dt": "CRM Product",
+  "fieldname": "custom_weight_kg",
+  "fieldtype": "Float",
+  "label": "Khối lượng (kg)",
+  "insert_after": "custom_uom",
+  "precision": "3"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Product-custom_length_cm",
+  "dt": "CRM Product",
+  "fieldname": "custom_length_cm",
+  "fieldtype": "Float",
+  "label": "Dài (cm)",
+  "insert_after": "custom_weight_kg"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Product-custom_width_cm",
+  "dt": "CRM Product",
+  "fieldname": "custom_width_cm",
+  "fieldtype": "Float",
+  "label": "Rộng (cm)",
+  "insert_after": "custom_length_cm"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Product-custom_height_cm",
+  "dt": "CRM Product",
+  "fieldname": "custom_height_cm",
+  "fieldtype": "Float",
+  "label": "Cao (cm)",
+  "insert_after": "custom_width_cm"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Product-custom_short_description",
+  "dt": "CRM Product",
+  "fieldname": "custom_short_description",
+  "fieldtype": "Small Text",
+  "label": "Mô tả ngắn",
+  "insert_after": "description"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Product-custom_is_combo",
+  "dt": "CRM Product",
+  "fieldname": "custom_is_combo",
+  "fieldtype": "Check",
+  "label": "Là combo",
+  "insert_after": "product_name",
+  "default": "0"
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_fb_page_id",
+  "dt": "CRM Lead",
+  "fieldname": "custom_fb_page_id",
+  "fieldtype": "Data",
+  "label": "Facebook Page ID",
+  "insert_after": "custom_source_detail",
+  "search_index": 1,
+  "read_only": 1
+ },
+ {
+  "doctype": "Custom Field",
+  "name": "CRM Lead-custom_fb_page_name",
+  "dt": "CRM Lead",
+  "fieldname": "custom_fb_page_name",
+  "fieldtype": "Data",
+  "label": "Facebook Page",
+  "insert_after": "custom_fb_page_id",
+  "read_only": 1,
+  "in_standard_filter": 1
+ }
+]

@@ -1,0 +1,21 @@
+{
+ "doctype": "DocType",
+ "name": "Stock Ledger Entry",
+ "module": "Call Bridge",
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "engine": "InnoDB",
+ "field_order": ["stock_entry", "item", "warehouse", "qty_change", "qty_after"],
+ "fields": [
+  {"fieldname": "stock_entry", "fieldtype": "Link", "label": "Phiếu", "options": "Stock Entry", "in_list_view": 1},
+  {"fieldname": "item", "fieldtype": "Link", "label": "Sản phẩm", "options": "CRM Product", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "warehouse", "fieldtype": "Link", "label": "Kho", "options": "Warehouse", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "qty_change", "fieldtype": "Float", "label": "Thay đổi", "in_list_view": 1},
+  {"fieldname": "qty_after", "fieldtype": "Float", "label": "Tồn sau", "in_list_view": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1},
+  {"role": "Sales Manager", "read": 1, "report": 1},
+  {"role": "Sales User", "read": 1, "report": 1}
+ ]
+}

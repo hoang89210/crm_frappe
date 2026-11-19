@@ -1,0 +1,14 @@
+MANIFEST.in
+README.md
+license.txt
+patches.txt
+requirements.txt
+setup.py
+pushesale/__init__.py
+pushesale/hooks.py
+pushesale/modules.txt
+pushesale.egg-info/PKG-INFO
+pushesale.egg-info/SOURCES.txt
+pushesale.egg-info/dependency_links.txt
+pushesale.egg-info/not-zip-safe
+pushesale.egg-info/top_level.txt

@@ -1,0 +1,25 @@
+{
+ "doctype": "DocType",
+ "name": "Warehouse",
+ "module": "Call Bridge",
+ "autoname": "field:warehouse_name",
+ "naming_rule": "By fieldname",
+ "is_tree": 1,
+ "nsm_parent_field": "parent_warehouse",
+ "allow_rename": 1,
+ "engine": "InnoDB",
+ "field_order": ["warehouse_name", "is_group", "parent_warehouse", "lft", "rgt", "old_parent"],
+ "fields": [
+  {"fieldname": "warehouse_name", "fieldtype": "Data", "label": "Tên kho", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "is_group", "fieldtype": "Check", "label": "Là nhóm", "default": "0"},
+  {"fieldname": "parent_warehouse", "fieldtype": "Link", "label": "Kho cha", "options": "Warehouse"},
+  {"fieldname": "lft", "fieldtype": "Int", "hidden": 1, "read_only": 1, "no_copy": 1},
+  {"fieldname": "rgt", "fieldtype": "Int", "hidden": 1, "read_only": 1, "no_copy": 1},
+  {"fieldname": "old_parent", "fieldtype": "Link", "options": "Warehouse", "hidden": 1, "read_only": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "export": 1, "report": 1},
+  {"role": "Sales Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "export": 1, "report": 1},
+  {"role": "Sales User", "read": 1, "write": 1, "create": 1, "delete": 1, "export": 1, "report": 1}
+ ]
+}

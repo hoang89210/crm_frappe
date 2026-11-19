@@ -42,3 +42,9 @@ docker/.env
 # Backups (chua du lieu thuc)
 Test/backups/
 
+
+demo-docker/.env
+
+
+demo-docker.zip
+

@@ -1,0 +1,183 @@
+{
+ "doctype": "DocType",
+ "name": "Call Log",
+ "module": "Call Bridge",
+ "autoname": "naming_series:",
+ "allow_import": 1,
+ "field_order": [
+  "naming_series",
+  "lead",
+  "phone",
+  "lan_cham",
+  "nguon",
+  "trang_thai_cuoc",
+  "ket_qua",
+  "column_break_1",
+  "ly_do",
+  "ngay_hen",
+  "bat_dau",
+  "ket_thuc",
+  "sale",
+  "device",
+  "job",
+  "section_break_1",
+  "call_id",
+  "thoi_luong",
+  "recording_url"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "CALL-LOG-.YYYY.-",
+   "default": "CALL-LOG-.YYYY.-",
+   "no_copy": 1,
+   "print_hide": 1
+  },
+  {
+   "fieldname": "lead",
+   "fieldtype": "Link",
+   "label": "Lead",
+   "options": "CRM Lead",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "SĐT",
+   "options": "Phone",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "lan_cham",
+   "fieldtype": "Int",
+   "label": "Lần chăm",
+   "default": 0,
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "nguon",
+   "fieldtype": "Select",
+   "label": "Nguồn",
+   "options": "sim",
+   "default": "sim"
+  },
+  {
+   "fieldname": "trang_thai_cuoc",
+   "fieldtype": "Select",
+   "label": "Trạng thái cuộc",
+   "options": "Dang goi\nDa tra ket qua",
+   "default": "Dang goi",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "ket_qua",
+   "fieldtype": "Select",
+   "label": "Kết quả",
+   "options": "\nKhong nghe\nThue bao\nBan goi lai\nCan cham tiep\nHen goi lai\nChot\nChurn",
+   "default": "",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ly_do",
+   "fieldtype": "Small Text",
+   "label": "Lý do"
+  },
+  {
+   "fieldname": "ngay_hen",
+   "fieldtype": "Datetime",
+   "label": "Ngày hẹn"
+  },
+  {
+   "fieldname": "bat_dau",
+   "fieldtype": "Datetime",
+   "label": "Bắt đầu"
+  },
+  {
+   "fieldname": "ket_thuc",
+   "fieldtype": "Datetime",
+   "label": "Kết thúc"
+  },
+  {
+   "fieldname": "sale",
+   "fieldtype": "Link",
+   "label": "Sale",
+   "options": "User",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "device",
+   "fieldtype": "Link",
+   "label": "Máy gọi",
+   "options": "Call Device"
+  },
+  {
+   "fieldname": "job",
+   "fieldtype": "Link",
+   "label": "Call Job",
+   "options": "Call Job",
+   "unique": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Dành cho tổng đài sau này"
+  },
+  {
+   "fieldname": "call_id",
+   "fieldtype": "Data",
+   "label": "Call ID (tổng đài)"
+  },
+  {
+   "fieldname": "thoi_luong",
+   "fieldtype": "Duration",
+   "label": "Thời lượng"
+  },
+  {
+   "fieldname": "recording_url",
+   "fieldtype": "Data",
+   "label": "Recording URL"
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "role": "Sales Manager",
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "share": 1
+  },
+  {
+   "role": "Sales User",
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

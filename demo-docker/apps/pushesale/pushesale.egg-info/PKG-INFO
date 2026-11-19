@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: pushesale
+Version: 0.0.1
+Summary: Frappe app replacing basic Pushsale (CRM Lead + Chatwoot + SIM calls)
+Author: Dev
+Author-email: dev@example.com
+Dynamic: author
+Dynamic: author-email
+Dynamic: summary
