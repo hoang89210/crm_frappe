@@ -59,7 +59,7 @@ docker compose logs -f backend
 docker compose ps
 ```
 
-Khi backend hiện `Starting Frappe on :8000` là CRM sẵn sàng.
+Khi backend hiện `Starting Frappe with gunicorn on :8000` là CRM sẵn sàng. Nếu backend restart liên tục: `docker compose logs backend | grep entrypoint` để xem lý do (xem mục "Khởi động backend" trong `DOCKER_DEPLOY_GUIDE.md`).
 
 ## 5. Truy cập (1 IP)
 
@@ -111,7 +111,8 @@ docker compose exec backend bench --site crm.local backup --with-files
 | Port 80 bận | Đổi map `"80:80"` → `"8080:80"` trong `docker-compose.yml`, vào `http://IP:8080` |
 | RAM thấp / OOM | Tăng RAM máy / Docker Desktop ≥ 8GB |
 | `/chatwoot/` 502 | Đợi Chatwoot khởi động thêm 30–60s, xem `docker compose logs chatwoot` |
-| CRM 404 trên IP | Đảm bảo backend đã `Starting Frappe`; `PUBLIC_BASE_URL` đúng host đang mở browser |
+| CRM 404 trên IP | Đảm bảo backend đã `Starting Frappe with gunicorn`; `PUBLIC_BASE_URL` đúng host đang mở browser |
+| Backend restart liên tục, log `FATAL: ... half-created` / `may hold data` | Site tạo dở hoặc hỏng. Site dở không dữ liệu được tự tạo lại khi `AUTO_RECREATE_BROKEN_SITE=1`; site có dữ liệu không bao giờ bị tự drop: backup rồi làm theo hướng dẫn in trong log |
 | Build fail mạng | Cần server ra được GitHub + Docker Hub |
 
 ## 9. Repo & hỗ trợ

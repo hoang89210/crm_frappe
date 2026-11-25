@@ -50,7 +50,33 @@ docker compose logs -f chatwoot
 docker compose logs -f nginx
 ```
 
-Khi backend hiện `Starting Frappe on :8000` và chatwoot không crash → OK.
+Khi backend hiện `Starting Frappe with gunicorn on :8000` và chatwoot không crash → OK.
+
+## Khởi động backend: site dở / migrate / gunicorn
+
+Entrypoint (`docker-entrypoint.sh`) khi khởi động:
+
+1. Link `sites/assets` tới assets build sẵn trong image (`/home/frappe/frappe-bench/assets`), nên rebuild image xong không bị assets cũ trong volume `sites`.
+2. Chờ MariaDB (tối đa 120s), không lên được thì **thoát lỗi**.
+3. Phân loại site:
+   - chưa có → `new-site` + `install-app crm, pushesale` + `migrate` + seed, xong mới ghi marker `sites/<site>/.provisioned`;
+   - có marker (hoặc site cũ có đủ bảng Core) → cài app còn thiếu + **luôn `migrate`**;
+   - **dở** (không có marker, DB không tồn tại hoặc `tabModule Def`/`tabPatch Log`/`tabDefaultValue` thiếu/rỗng, **không có dữ liệu người dùng**) → nếu `AUTO_RECREATE_BROKEN_SITE=1` thì drop DB + chuyển thư mục site cũ vào `sites/.archived_broken_sites/` rồi tạo lại;
+   - **mơ hồ** (Core hỏng nhưng có dữ liệu: user, CRM Lead/Deal, Contact, file...) → **không drop**, container thoát lỗi kèm hướng dẫn khôi phục tay.
+4. Bất kỳ bước nào lỗi → container thoát mã ≠ 0 (thấy restart trong `docker compose ps`), không bao giờ serve site lỗi (trước đây ra HTTP 500 "Module Core not found").
+5. Chạy **gunicorn** (không có Werkzeug debugger). `FRAPPE_DEV_SERVER=1` để quay lại `bench serve` khi dev.
+
+Khi backend sẵn sàng log có: `Starting Frappe with gunicorn on :8000`.
+
+| Biến | Mặc định | Ý nghĩa |
+|------|----------|---------|
+| `AUTO_RECREATE_BROKEN_SITE` | `1` | Tự drop + tạo lại site **chắc chắn dở**. Đặt `0` trên server có dữ liệu thật nếu muốn luôn tự xử lý tay. |
+| `FRAPPE_DEV_SERVER` | `0` | `1` = `bench serve` (debugger bật, KHÔNG public). |
+| `GUNICORN_WORKERS` | `2` | Số worker gunicorn. |
+| `GUNICORN_THREADS` | `4` | Thread mỗi worker (gthread). |
+| `GUNICORN_TIMEOUT` | `120` | Timeout request (giây). |
+
+nginx lấy `SITE_NAME` từ `.env` (template `nginx/default.conf.template`), nên đổi tên site không cần sửa nginx.
 
 ## 4. Truy cập (1 URL)
 
