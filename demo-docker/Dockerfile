@@ -35,6 +35,13 @@ RUN cd /home/frappe/frappe-bench \
  && bench build --app crm \
  && bench build --app frappe
 
+# Keep built assets OUTSIDE sites/: the `sites` named volume hides sites/assets
+# and is only seeded once, so after a rebuild it would serve stale assets.json.
+# The entrypoint symlinks sites/assets -> /home/frappe/frappe-bench/assets on boot.
+RUN cd /home/frappe/frappe-bench \
+ && cp -a sites/assets /home/frappe/frappe-bench/assets \
+ && rm -rf sites/assets
+
 COPY --chown=frappe:frappe docker-entrypoint.sh /home/frappe/frappe-bench/docker-entrypoint.sh
 USER root
 RUN sed -i 's/\r$//' /home/frappe/frappe-bench/docker-entrypoint.sh \

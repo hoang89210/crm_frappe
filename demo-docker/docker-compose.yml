@@ -50,6 +50,14 @@ services:
       DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       CHATWOOT_INTERNAL_URL: http://chatwoot:3000/chatwoot
       CHATWOOT_PUBLIC_URL: ${PUBLIC_BASE_URL:-http://127.0.0.1}/chatwoot
+      # 1 = drop + recreate the site ONLY if it is provably half-created
+      # (no .provisioned marker, Core tables missing/empty, no user data).
+      AUTO_RECREATE_BROKEN_SITE: ${AUTO_RECREATE_BROKEN_SITE:-1}
+      # 1 = bench serve (Werkzeug debugger!) for local dev; default gunicorn.
+      FRAPPE_DEV_SERVER: ${FRAPPE_DEV_SERVER:-0}
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-2}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-120}
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
@@ -174,8 +182,11 @@ services:
       - chatwoot
     ports:
       - "80:80"
+    environment:
+      # Rendered into /etc/nginx/conf.d/default.conf by the nginx image (envsubst).
+      SITE_NAME: ${SITE_NAME:-crm.local}
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
 
 volumes:
   mariadb_data:
